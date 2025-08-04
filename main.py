@@ -1,5 +1,4 @@
 import sqlite3
-import re
 num = 0
 
 Conexao = sqlite3.connect('Banco_Dados.db')
@@ -24,7 +23,8 @@ while True:
     [2] Deletar Tarefa
     [3] Modificar Tarefa
     [4] Marcar Tarefa como Concluida
-    [5] Encerrar Programa      
+    [5] Visualizar/Pesquisar Tarefas
+    [6] Encerrar Programa      
     """)
     escolha = int(input("Qual é a sua escolha?")) 
 
@@ -95,6 +95,39 @@ while True:
         print("Tarefa Marcada como Concluída com sucesso!")
 
     elif escolha == 5:
+        print("Oque deseja fazer:")
+        opcao = int(input("""
+        [1] Pesquisar tarefa
+        [2] Visualizar tarefas pendentes
+        [3] Visualizar tarefas concluidas"""))
+        
+        if opcao == 1:
+            pesquisa = str(input("Digite o nome da tarefa")).strip()
+            Cursor.execute(f'SELECT * FROM "{nome_lista}" WHERE nome Like ?', ('%' + pesquisa + '%',))
+
+            resultados = Cursor.fetchall()
+
+            if resultados:
+                print("Resultados encontrados")
+                for tarefa in resultados:
+                    print(tarefa)
+            else:
+                print("Nenhuma Tarefa com esse nome encontrada!")
+
+        elif opcao == 2:
+            Cursor.execute(f'SELECT * FROM "{nome_lista}" WHERE status = "Pendente"')
+            pendentes = Cursor.fetchall()
+
+            if pendentes:
+                print("Tarefas Pendentes:")
+                for tarefa in pendentes:
+                    print(tarefa)
+            
+            else:
+                print("Nenhuma Tarefa Pendente encontrada!")
+
+
+    elif escolha == 6:
         print("Encerrando Programa...")
         break
 
